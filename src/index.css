@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-dairy-cream: #FFFDF7;
+  --color-dairy-blue: #E3F2FD;
+  --color-dairy-accent: #1E88E5;
+  --color-dairy-dark: #2C3E50;
+  --color-dairy-gold: #D4AF37;
+}
+
+@layer base {
+  body {
+    @apply bg-dairy-cream text-dairy-dark antialiased;
+  }
+}
+
+.glass-morphism {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+.dairy-card {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md hover:-translate-y-1 overflow-hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-dairy-blue rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-dairy-accent/50;
+}
+

@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String?
+  password  String
+  name      String
+  role      String   @default("customer") // admin, customer
+  wallet    Float    @default(0)
+  createdAt DateTime @default(now())
+  orders    Order[]
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  image    String?
+  products Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  unit        String   // litre, kg, packet
+  image       String
+  stock       Int      @default(0)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  OrderItem   OrderItem[]
+  variants    Variant[]
+}
+
+model Variant {
+  id        String  @id @default(cuid())
+  name      String  // e.g., "500ml", "1kg", "Chocolate"
+  price     Float
+  stock     Int     @default(0)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  orderItems OrderItem[]
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  totalAmount     Float
+  status          String   @default("Pending") // Pending, Preparing, OutForDelivery, Delivered, Cancelled
+  deliveryType    String   // Express, Scheduled, Bulk
+  scheduledDate   DateTime?
+  instructions    String?
+  paymentMethod   String   @default("COD") // COD, Wallet
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  variantId String?
+  variant   Variant? @relation(fields: [variantId], references: [id])
+  quantity  Int
+  price     Float
+}
+
+model PromoCode {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  discount  Float
+  expiresAt DateTime
+  active    Boolean  @default(true)
+}
